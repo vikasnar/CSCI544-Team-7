@@ -4,6 +4,8 @@ from stop_words import get_stop_words
 
 # Json file containing the comments
 comments_file = '/Users/sridharyadav/Downloads/SenTube/tablets_IT/video_-ps8odUxZpA-annotator:Agata.json'
+it_stop = get_stop_words('italian')
+tokenizer = RegexpTokenizer(r'\w+')
 
 def read_data(comments):
     video = json.load(open(comments))
