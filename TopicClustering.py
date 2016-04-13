@@ -1,12 +1,42 @@
 import re
 from nltk.tokenize import RegexpTokenizer
 from stop_words import get_stop_words
+from collections import defaultdict
+import json
+import scipy.sparse as sp
+import lda.datasets
+import numpy as np
+import unicodedata
 
 # Json file containing the comments
 comments_file = '/Users/sridharyadav/Downloads/SenTube/tablets_IT/video_-ps8odUxZpA-annotator:Agata.json'
 it_stop = get_stop_words('italian')
 tokenizer = RegexpTokenizer(r'\w+')
+original_comments = []
 
+def cluster_comments(doc_set, texts):
+    vectorizer = CountVectorizer(analyzer='word', ngram_range=(1, 1), min_df=0)
+    matrix = vectorizer.fit_transform(doc_set)
+    matrix = sp.csr_matrix(matrix, dtype=np.int64, copy=False)
+    # feature_names = vectorizer.get_feature_names()
+    vocab = tuple(texts)
+    orig_titles = tuple(original_comments)
+    titles = tuple(doc_set)
+    model = lda.LDA(n_topics=3, n_iter=500, random_state=1)
+    model.fit(matrix)
+    topic_word = model.topic_word_  # model.components_ also works
+    n_top_words = 8
+    for i, topic_dist in enumerate(topic_word):
+        topic_words = np.array(vocab)[np.argsort(topic_dist)][:-n_top_words:-1]
+        print('Topic {}: {}'.format(i, ' '.join(topic_words)))
+    doc_topic = model.doc_topic_
+    dictionary = defaultdict(list)
+    orig_dictionary = defaultdict(list)
+    for i in range(len(doc_set)):
+        dictionary[int(doc_topic[i].argmax())].append(titles[i])
+        orig_dictionary[int(doc_topic[i].argmax())].append(orig_titles[i])
+    return dictionary,orig_dictionary
+    
 def read_data(comments):
     video = json.load(open(comments))
     comment_set = []
