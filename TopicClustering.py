@@ -1,23 +1,28 @@
+import numpy as np
+import unicodedata
+import lda.datasets
 import re
+import scipy.sparse as sp
+import json
+import codecs
+import networkx as nx
 from nltk.tokenize import RegexpTokenizer
 from stop_words import get_stop_words
 from collections import defaultdict
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-import json
-import scipy.sparse as sp
-import lda.datasets
-import numpy as np
-import unicodedata
 
-# Json file containing the comments
-comments_file = 'test.json'
+ranking_file = codecs.open("topComments.txt", "w", "utf-8")
+cluster_file = codecs.open("clustering.txt", "w", "utf-8")
 it_stop = get_stop_words('italian')
 tokenizer = RegexpTokenizer(r'\w+')
-original_comments = []
 c = CountVectorizer()
+original_comments = []
 # Number of comments to Fetch within cluster
 k = 5
+# Json file containing the comments
+comments_file = 'test.json'
+
 
 def cluster_comments(doc_set, texts):
     vectorizer = CountVectorizer(analyzer='word', ngram_range=(1, 1), min_df=0)
@@ -41,7 +46,8 @@ def cluster_comments(doc_set, texts):
         dictionary[int(doc_topic[i].argmax())].append(titles[i])
         orig_dictionary[int(doc_topic[i].argmax())].append(orig_titles[i])
     return dictionary,orig_dictionary
-    
+
+
 def read_data(comments):
     video = json.load(open(comments))
     comment_set = []
@@ -80,8 +86,12 @@ def rankcomments(orig_commentcluster, commentcluster, k):
 def main():
     doc_set = read_data(comments_file)
     texts = clean_data(doc_set)
-    clusters, orig_clusters = cluster_comments(doc_set, texts)
+    clusters,orig_clusters = cluster_comments(doc_set, texts)
     for key, value in clusters.iteritems():
-        rankcomments(orig_clusters[key], value, k)
+        cluster_file.write("(top topic: {}) - {}  \n".format(key, value))
+        ranking_file.write("Top comments in topic are\n")
+        rankcomments(orig_clusters[key],value, k)
+    cluster_file.close()
+    ranking_file.close()
 
 main()
