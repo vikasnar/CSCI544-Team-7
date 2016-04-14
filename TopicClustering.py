@@ -16,6 +16,8 @@ it_stop = get_stop_words('italian')
 tokenizer = RegexpTokenizer(r'\w+')
 original_comments = []
 c = CountVectorizer()
+# Number of comments to Fetch within cluster
+k = 5
 
 def cluster_comments(doc_set, texts):
     vectorizer = CountVectorizer(analyzer='word', ngram_range=(1, 1), min_df=0)
@@ -72,5 +74,8 @@ def rankcomments(orig_commentcluster, commentcluster, k):
 def main():
     doc_set = read_data(comments_file)
     texts = clean_data(doc_set)
+    clusters, orig_clusters = cluster_comments(doc_set, texts)
+    for key, value in clusters.iteritems():
+        rankcomments(orig_clusters[key], value, k)
 
 main()
