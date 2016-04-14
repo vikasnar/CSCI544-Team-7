@@ -48,6 +48,7 @@ def cluster_comments(doc_set, texts):
     return dictionary,orig_dictionary
 
 
+# Read comments from the corpus and remove special character and newline
 def read_data(comments):
     video = json.load(open(comments))
     comment_set = []
@@ -57,6 +58,7 @@ def read_data(comments):
     return comment_set
 
 
+# Process comments by removing stop words and tokenizing them
 def clean_data(comments_list):
     comment_texts = []
     # loop through document list
