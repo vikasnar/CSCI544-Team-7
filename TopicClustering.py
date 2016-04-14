@@ -81,6 +81,11 @@ def rankcomments(orig_commentcluster, commentcluster, k):
     bow_matrix = c.fit_transform(commentcluster)
     normalized_matrix = TfidfTransformer().fit_transform(bow_matrix)
     similarity_graph = normalized_matrix * normalized_matrix.T
+    nx_graph = nx.from_scipy_sparse_matrix(similarity_graph)
+    scores = nx.pagerank(nx_graph, 0.85)
+    ranked = sorted(((scores[i], s) for i, s in enumerate(orig_commentcluster)), reverse=True)
+    for tC in range(0, k):
+        ranking_file.write("Comment {} : {}\n".format(tC, ranked[tC][1]))
 
 
 def main():
