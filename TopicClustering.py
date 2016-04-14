@@ -9,7 +9,7 @@ import numpy as np
 import unicodedata
 
 # Json file containing the comments
-comments_file = '/Users/sridharyadav/Downloads/SenTube/tablets_IT/video_-ps8odUxZpA-annotator:Agata.json'
+comments_file = 'test.json'
 it_stop = get_stop_words('italian')
 tokenizer = RegexpTokenizer(r'\w+')
 original_comments = []
