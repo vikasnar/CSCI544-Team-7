@@ -65,6 +65,12 @@ def clean_data(comments_list):
     return comment_texts
 
 
+# Ranks comments in cluster and extracts top k comments
+# Parameters
+# ----------
+# orig_commentcluster : Original comments
+# commentcluster : Tokenized comments
+# k : Number of top comments extracted
 def rankcomments(orig_commentcluster, commentcluster, k):
     bow_matrix = c.fit_transform(commentcluster)
     normalized_matrix = TfidfTransformer().fit_transform(bow_matrix)
