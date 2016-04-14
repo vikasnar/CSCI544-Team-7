@@ -2,6 +2,8 @@ import re
 from nltk.tokenize import RegexpTokenizer
 from stop_words import get_stop_words
 from collections import defaultdict
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
 import json
 import scipy.sparse as sp
 import lda.datasets
@@ -13,6 +15,7 @@ comments_file = 'test.json'
 it_stop = get_stop_words('italian')
 tokenizer = RegexpTokenizer(r'\w+')
 original_comments = []
+c = CountVectorizer()
 
 def cluster_comments(doc_set, texts):
     vectorizer = CountVectorizer(analyzer='word', ngram_range=(1, 1), min_df=0)
@@ -58,6 +61,13 @@ def clean_data(comments_list):
         # add tokens to list
         comment_texts = comment_texts + stopped_tokens
     return comment_texts
+
+
+def rankcomments(orig_commentcluster, commentcluster, k):
+    bow_matrix = c.fit_transform(commentcluster)
+    normalized_matrix = TfidfTransformer().fit_transform(bow_matrix)
+    similarity_graph = normalized_matrix * normalized_matrix.T
+
 
 def main():
     doc_set = read_data(comments_file)
