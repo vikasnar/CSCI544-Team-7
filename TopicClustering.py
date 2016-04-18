@@ -43,7 +43,7 @@ c = CountVectorizer()
 # Number of comments to Fetch within each cluster.
 k = 3
 # Json file containing the comments.
-video_file = '/Users/sridharyadav/Downloads/SenTube/tablets_IT/video_-ps8odUxZpA-annotator:Agata.json'
+video_file = 'test.json'
 
 
 def rankcomments(orig_commentcluster, commentcluster, k):
