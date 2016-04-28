@@ -1,7 +1,6 @@
 from stop_words import get_stop_words
 import itertools
 import re
-import math
 import numpy as np
 from collections import OrderedDict
 
@@ -73,7 +72,7 @@ def kl(p, q):
     """
     Calculate KL entropy score between probability distributions
     :param p: Discrete probability distribution.
-    :param q: Discrete probability distributions.
+    :param q: Discrete probability distribution.
     :return: Calculated entropy
     """
     p = np.asarray(p, dtype=np.float)
