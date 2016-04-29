@@ -41,7 +41,7 @@ def get_probability_distribution(count_dict, prob_dict):
     count = sum(count_dict.values())
     for word in count_dict:
         if word not in prob_dict:
-            prob_dict[word] = float(count_dict[word]) / count;
+            prob_dict[word] = float(count_dict[word]+1) / float(count + len(vocab));
     return prob_dict
 
 
@@ -64,7 +64,7 @@ def normalize(token_dict):
     """
     for word in vocab:
         if word not in token_dict:
-            token_dict[word] = 0.0000000001
+            token_dict[word] = float(1)/len(vocab)
     return token_dict
 
 
@@ -103,5 +103,6 @@ def main():
     comments_vector = list(normalize(comments_prob_dist).values())
 
     print kl(summary_vector, comments_vector)
+
 
 main()
